@@ -42,6 +42,12 @@ public class LogicServlet extends HttpServlet {
             if (checkWin(resp, currentSession, field)) {
                 return;
             }
+        } else {
+            currentSession.setAttribute("draw", true);
+            List<Sign> data = field.getFieldData();
+            currentSession.setAttribute("data", data);
+            resp.sendRedirect("/index.jsp");
+            return;
         }
 
         List<Sign> data = field.getFieldData();
@@ -55,16 +61,9 @@ public class LogicServlet extends HttpServlet {
     private boolean checkWin(HttpServletResponse response, HttpSession currentSession, Field field) throws IOException {
         Sign winner = field.checkWin();
         if (Sign.CROSS == winner || Sign.NOUGHT == winner) {
-            // Add a flag to indicate that someone has won
             currentSession.setAttribute("winner", winner);
-
-            // Read the list of icons
             List<Sign> data = field.getFieldData();
-
-            // Update this list in session
             currentSession.setAttribute("data", data);
-
-            // helmet redirect
             response.sendRedirect("/index.jsp");
             return true;
         }
